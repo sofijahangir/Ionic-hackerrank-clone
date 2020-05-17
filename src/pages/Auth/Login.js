@@ -1,19 +1,45 @@
 import React from 'react'
 import NavHeader from '../../components/Header/NavHeader';
-import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonRow, IonCol, IonButton, IonRouterLink } from '@ionic/react';
+import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonRow, IonCol, IonButton, IonRouterLink, IonLoading } from '@ionic/react';
+import useForm from '../../hooks/useForm';
+import validateLogin from '../../validators/validateLogin';
+import firebase from '../../firebase';
+import { toast } from '../../helpers/toast';
 
-const Login = () => {
+const INITIAL_STATE = {
+    name: "",
+    email: "",
+}
+const Login = (props) => {
+    const { handleSubmit, handleChange, values, isSubmitting } = useForm(INITIAL_STATE, validateLogin, authenticateUser);
+    const [busy, setBusy] = React.useState(false);
+
+    async function authenticateUser() {
+        setBusy(true);
+        const {email, password} = values;
+        try {
+            await firebase.login(email, password);
+            toast("You have logged in successfully!")
+            props.history.push("/")
+        } catch (err) {
+            console.error("Authentication Error", err);
+            toast(err.message);
+        }
+        setBusy(false);
+    }
+
     return (
         <IonPage>
             <NavHeader title="Log In" />
+            <IonLoading message={"Please wait..."} isOpen={busy} />
             <IonContent>
                 <IonItem lines="full">
                     <IonLabel position="floating">Email</IonLabel>
-                    <IonInput name="email" type="text" required></IonInput>
+                    <IonInput name="email" type="text" value={values.email} onIonChange={handleChange} required></IonInput>
                 </IonItem>
                 <IonItem lines="full">
                     <IonLabel position="floating">Password</IonLabel>
-                    <IonInput name="password" type="password" required></IonInput>
+                    <IonInput name="password" type="password" value={values.password} onIonChange={handleChange} required></IonInput>
                 </IonItem>
                 <IonRow>
                     <IonCol>
@@ -21,6 +47,8 @@ const Login = () => {
                         type="submit"
                         color="primary"
                         expand="block"
+                        onClick={handleSubmit}
+                        disabled={isSubmitting}
                         >
                             Log In
                         </IonButton>
