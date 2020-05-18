@@ -19,7 +19,7 @@ import Signup from './pages/Auth/Signup';
 import Login from './pages/Auth/Login';
 import Forgot from './pages/Auth/Forgot';
 import useAuth from './hooks/useAuth';
-import UserContext from './context/UserContext';
+import UserContext from './contexts/UserContext';
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
