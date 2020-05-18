@@ -20,6 +20,7 @@ import Login from './pages/Auth/Login';
 import Forgot from './pages/Auth/Forgot';
 import useAuth from './hooks/useAuth';
 import UserContext from './contexts/UserContext';
+import Link from './pages/Link';
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
@@ -62,6 +63,8 @@ const App = () => {
                 <Route path="/register" component={Signup} />
                 <Route path="/login" component={Login} />
                 <Route path="/forgot" component={Forgot} />
+                <Route path="/link/:linkId" component={Link} />
+ 
 
 
                 <Route component={() => <Redirect to="/news"/>} />
